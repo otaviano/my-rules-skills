@@ -115,6 +115,12 @@ description: When and how to use this skill.
 | [python-conventions](.claude/python/rules/python.conventions.md) | Naming, formatting, type hints, error handling, logging, and testing (PEP 8/257/20) |
 | [python-project-structure](.claude/python/rules/python.project-structure.md) | src layout, pyproject.toml, uv, dependency injection, architecture layers |
 
+### React
+| Rule | Description |
+|------|-------------|
+| [react-conventions](.claude/react/rules/react.conventions.md) | Component purity, hooks rules, state, effects, props, TypeScript, and accessibility (react.dev) |
+| [react-project-structure](.claude/react/rules/react.project-structure.md) | Feature-slice layout, state architecture, data fetching, routing, and tooling |
+
 ## Current Skills
 
 ### .NET
@@ -131,3 +137,8 @@ description: When and how to use this skill.
 | Skill | Description |
 |-------|-------------|
 | [python-feature](.claude/python/skills/python-feature/SKILL.md) | Workflow for implementing features (domain → service → repository → API endpoint → tests) |
+
+### React
+| Skill | Description |
+|-------|-------------|
+| [react-feature](.claude/react/skills/react-feature/SKILL.md) | Workflow for implementing features (types → API → hooks → components → page → tests) |

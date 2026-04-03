@@ -109,6 +109,12 @@ description: When and how to use this skill.
 | [golang-conventions](.claude/golang/rules/golang.conventions.md) | Naming, formatting, error handling, concurrency, and testing (Effective Go + Google Style) |
 | [golang-project-structure](.claude/golang/rules/golang.project-structure.md) | Package layout, dependency injection, module conventions |
 
+### Python
+| Rule | Description |
+|------|-------------|
+| [python-conventions](.claude/python/rules/python.conventions.md) | Naming, formatting, type hints, error handling, logging, and testing (PEP 8/257/20) |
+| [python-project-structure](.claude/python/rules/python.project-structure.md) | src layout, pyproject.toml, uv, dependency injection, architecture layers |
+
 ## Current Skills
 
 ### .NET
@@ -120,3 +126,8 @@ description: When and how to use this skill.
 | Skill | Description |
 |-------|-------------|
 | [golang-feature](.claude/golang/skills/golang-feature/SKILL.md) | Workflow for implementing features (domain → service → repository → handler → tests) |
+
+### Python
+| Skill | Description |
+|-------|-------------|
+| [python-feature](.claude/python/skills/python-feature/SKILL.md) | Workflow for implementing features (domain → service → repository → API endpoint → tests) |

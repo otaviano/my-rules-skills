@@ -103,9 +103,20 @@ description: When and how to use this skill.
 | [dotnet-conventions](.claude/dotnet/rules/dotnet.conventions.md) | .NET coding conventions |
 | [dotnet-clean-architecture](.claude/dotnet/rules/dotnet.instructions.md) | Clean Architecture with Brighter/Darker and Minimal API |
 
+### Go
+| Rule | Description |
+|------|-------------|
+| [golang-conventions](.claude/golang/rules/golang.conventions.md) | Naming, formatting, error handling, concurrency, and testing (Effective Go + Google Style) |
+| [golang-project-structure](.claude/golang/rules/golang.project-structure.md) | Package layout, dependency injection, module conventions |
+
 ## Current Skills
 
 ### .NET
 | Skill | Description |
 |-------|-------------|
 | [dotnet-clean-architecture](.claude/dotnet/skills/dotnet-clean-architecture/SKILL.md) | Workflow for implementing features following Clean Architecture |
+
+### Go
+| Skill | Description |
+|-------|-------------|
+| [golang-feature](.claude/golang/skills/golang-feature/SKILL.md) | Workflow for implementing features (domain → service → repository → handler → tests) |

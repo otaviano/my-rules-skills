@@ -1,0 +1,12 @@
+{
+  "permissions": {
+    "allow": [
+      "WebFetch(domain:github.com)",
+      "WebFetch(domain:raw.githubusercontent.com)",
+      "WebFetch(domain:brightercommand.github.io)",
+      "WebSearch",
+      "WebFetch(domain:brightercommand.gitbook.io)",
+      "WebFetch(domain:www.hanselman.com)"
+    ]
+  }
+}

@@ -21,7 +21,7 @@ Before creating a PR, execute these steps:
 
 6. Resolve the author's git email by running `git config user.email` and store it as `$AUTHOR_EMAIL`.
 
-7. If exists, use template at .github/pull_request_template.md. Replace the literal `{git.config.email}` placeholder with `$AUTHOR_EMAIL`. Otherwise generate PR summary including:
+7. If exists, use template at .github/pull_request_template.md. Replace the literal `{git.repository.owner}` placeholder with `$AUTHOR_EMAIL`. Otherwise generate PR summary including:
     ## Description
 
     A clear and concise description of the PR.

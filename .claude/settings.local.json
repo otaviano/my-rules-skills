@@ -6,7 +6,10 @@
       "WebFetch(domain:brightercommand.github.io)",
       "WebSearch",
       "WebFetch(domain:brightercommand.gitbook.io)",
-      "WebFetch(domain:www.hanselman.com)"
+      "WebFetch(domain:www.hanselman.com)",
+      "Bash(gh repo:*)",
+      "WebFetch(domain:google.github.io)",
+      "WebFetch(domain:peps.python.org)"
     ]
   }
 }

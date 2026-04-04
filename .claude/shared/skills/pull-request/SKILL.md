@@ -19,9 +19,9 @@ Before creating a PR, execute these steps:
    - `test:` for test additions
    - `chore:` for maintenance
 
-6. Resolve the author's git email by running `git config user.email` and store it as `$AUTHOR_EMAIL`.
+6. Resolve the repository owner by running `gh repo view --json owner --jq '.owner.login'` and store it as `$REPO_OWNER`.
 
-7. If exists, use template at .github/pull_request_template.md. Replace the literal `{git.repository.owner}` placeholder with `$AUTHOR_EMAIL`. Otherwise generate PR summary including:
+7. If exists, use template at .github/pull_request_template.md. Replace the literal `<!-- replace with the repository owner -->` placeholder with `$REPO_OWNER`. Otherwise generate PR summary including:
     ## Description
 
     A clear and concise description of the PR.
@@ -50,8 +50,8 @@ Before creating a PR, execute these steps:
     - [ ] Wrote tests for new components/features
     - [ ] Created a demo
 
-    ## Kelp Contributor License Agreement
+    ## Contributor License Agreement
 
-    I give $AUTHOR_EMAIL permission to license my contributions on any terms they like. I am giving them this license in order to make it possible for them to accept my contributions into their project.
+    I give $REPO_OWNER permission to license my contributions on any terms they like. I am giving them this license in order to make it possible for them to accept my contributions into their project.
 
     **_As far as the law allows, my contributions come as is, without any warranty or condition, and I will not be liable to anyone for any damages related to this software or this license, under any kind of legal claim._**

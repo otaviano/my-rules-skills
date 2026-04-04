@@ -179,5 +179,6 @@ def test_create_order(customer_id: str, should_raise: bool) -> None:
 - [ ] Module-level `logger = logging.getLogger(__name__)` — no `print()` for diagnostics
 - [ ] `pytest` passes with `--tb=short`
 - [ ] `pytest --cov` coverage maintained or improved
+- [ ] Mutation tests pass (`mutmut run`); improve score if below threshold
 - [ ] `uv sync` / `uv lock` updated if dependencies changed
 - [ ] No business logic in API handlers or `main.py`

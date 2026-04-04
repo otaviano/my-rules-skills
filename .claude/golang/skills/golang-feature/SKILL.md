@@ -113,3 +113,4 @@ func TestOrderService_Create(t *testing.T) {
 - [ ] `go test -race ./...` passes
 - [ ] `go vet ./...` passes
 - [ ] `go mod tidy` run if dependencies changed
+- [ ] Mutation tests pass (`gremlins unleash ./...`); improve score if below threshold

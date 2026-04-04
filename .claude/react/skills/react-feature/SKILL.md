@@ -204,5 +204,6 @@ test('shows validation error when customer ID is empty', async () => {
 - [ ] Component is accessible (keyboard navigable, has `alt` / `aria-*` where needed)
 - [ ] Feature exported only through `index.ts`
 - [ ] Tests cover happy path and key error states
+- [ ] Mutation tests pass (`npx stryker run`); improve score if below threshold
 - [ ] `eslint` passes with no warnings
 - [ ] `tsc --noEmit` passes

@@ -6,9 +6,11 @@ An agnostic library of Claude Code rules and skills, organized by language and s
 
 ```
 .claude/
+├── commands/           # Slash command shortcuts (invoke skills via /command-name)
 ├── shared/
 │   ├── rules/          # Rules applied across all languages
-│   └── skills/         # Skills available in all projects
+│   ├── skills/         # Skills available in all projects
+│   └── subagents/      # Specialized subagents used by shared skills
 ├── dotnet/
 │   ├── rules/          # .NET-specific architecture and coding rules
 │   └── skills/         # .NET-specific workflow skills
@@ -122,6 +124,13 @@ description: When and how to use this skill.
 | [react-project-structure](.claude/react/rules/react.project-structure.md) | Feature-slice layout, state architecture, data fetching, routing, and tooling |
 
 ## Current Skills
+
+### Shared
+| Skill | Description |
+|-------|-------------|
+| [code-review](.claude/shared/skills/code-review/SKILL.md) | Analyzes recent changes for security, performance, quality, test coverage, and design patterns |
+| [pull-request](.claude/shared/skills/pull-request/SKILL.md) | Prepares and creates a pull request following conventional commits, running tests and code review first |
+| [test-runner](.claude/shared/skills/test-runner/SKILL.md) | Runs tests, analyzes coverage gaps, writes missing tests, and validates mutation score |
 
 ### .NET
 | Skill | Description |

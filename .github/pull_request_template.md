@@ -26,7 +26,7 @@ Did you do any of the following?
 - [ ] Wrote tests for new components/features
 - [ ] Created a demo
 
-## Kelp Contributor License Agreement
+## Contributor License Agreement
 
 I give <!-- replace with the repository owner --> permission to license my contributions on any terms they like. I am giving them this license in order to make it possible for them to accept my contributions into their project.
 

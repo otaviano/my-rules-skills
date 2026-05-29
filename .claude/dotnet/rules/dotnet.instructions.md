@@ -1,57 +1,131 @@
 ---
 name: dotnet-clean-architecture-rules
-description: Architecture and coding rules for .NET Clean Architecture projects. Clean Architecture with CQRS (Brighter/Darker), Chain of Responsibility for domain workflows, and Minimal API conventions.
+description: Architecture and coding rules for .NET Clean Architecture projects. CQRS with Zibetti.Mediator, Repository pattern, crosscutting isolation, and Minimal API conventions.
 applyTo: "**/*.{cs,csproj,slnx}"
 ---
 
 # .NET Clean Architecture Rules
 
 ## Architecture Overview
-This project follows Clean Architecture with CQRS pattern using Brighter (commands) and Darker (queries). The structure is:
-- **Api**: Minimal API endpoints, middlewares, filters, view models
-- **Application**: Use cases (commands, queries, handlers, validators, results)
-- **Domain**: Business rules, enums, services, handlers (Chain of Responsibility)
-- **Infra**: IoC, persistence, core concerns
+Clean Architecture with CQRS using **Zibetti.Mediator** (`dotnet add package Zibetti.Mediator`). Layers:
 
-## Coding Conventions
+- **Api**: Minimal API endpoints, middleware, view models
+- **Application**: Commands, queries, handlers, validators, ports (interfaces for external services)
+- **Domain**: Entities, value objects, enums, repository interfaces
+- **Infrastructure**: EF Core, repository implementations (internal), BackgroundService
+- **Infrastructure.{Concern}**: Isolated crosscutting adapters (e.g. `Infrastructure.Pluggy`) — all adapter DTOs internal
+- **Infrastructure.IoC**: Composition root — DI wiring only
 
-### Libraries
-- FluentValidation for input validation
-- Brighter (`Paramore.Brighter`) for command dispatching
-- Darker (`Paramore.Darker`) for query dispatching
-- Chain of Responsibility pattern for domain workflows
+## CQRS with Zibetti.Mediator
 
-### Commands
-- Inherit from `Command` base class: `public class MyCommand : Command { }`
-- Handlers extend `RequestHandler<T>` and override `Handle(T command)`
-- For async handlers, extend `RequestHandlerAsync<T>` and override `HandleAsync`
-- Register handlers via `SubscriberRegistry` or assembly scanning
-- Dispatch with `IAmACommandProcessor.Send(command)`
+### Command (with result)
+```csharp
+public sealed record CreateItemCommand(string PluggyId) : ICommand<Guid>;
 
-### Queries
-- Implement `IQuery<TResult>`: `public class MyQuery : IQuery<Result> { }`
-- Handlers implement `IQueryHandler<TQuery, TResult>` with `ExecuteAsync`
-- Dispatch with `IQueryProcessor.ExecuteAsync(query)`
+public sealed class CreateItemCommandHandler(IItemRepository repository)
+    : ICommandHandler<CreateItemCommand, Guid>
+{
+    public async Task<Guid> HandleAsync(CreateItemCommand command, CancellationToken ct = default)
+    {
+        var item = new Item(command.PluggyId);
+        await repository.AddAsync(item, ct);
+        return item.Id;
+    }
+}
+```
 
-### General
-- Use primary constructors for dependency injection
-- Keep handlers focused on a single responsibility
-- Validate with FluentValidation before processing
+### Query
+```csharp
+public sealed record GetItemsQuery : IQuery<IReadOnlyList<ItemResult>>;
 
-### Domain Logic
-- Domain workflows use Chain of Responsibility with an abstract base handler
-- Each handler checks if it can process the request, otherwise passes to next
+public sealed class GetItemsQueryHandler(IItemRepository repository)
+    : IQueryHandler<GetItemsQuery, IReadOnlyList<ItemResult>>
+{
+    public async Task<IReadOnlyList<ItemResult>> HandleAsync(GetItemsQuery query, CancellationToken ct = default)
+        => (await repository.GetAllAsync(ct)).Select(i => new ItemResult(i.Id, i.Name)).ToList();
+}
+```
 
-### API Layer
-- Minimal API with endpoint filters for validation
-- Use Scalar for OpenAPI documentation
-- Custom middleware for exception handling
-- CORS enabled for frontend integration
+### Dispatch in endpoint
+```csharp
+// Command with result
+var id = await mediator.SendAsync<CreateItemCommand, Guid>(command, ct);
+// Fire-and-forget
+await mediator.SendAsync(command, ct);
+// Query
+var result = await mediator.QueryAsync<GetItemsQuery, IReadOnlyList<ItemResult>>(query, ct);
+```
 
-### Validation
-- Request validators in Api.Validators
-- Use `ValidateAndThrowAsync` in handlers
+### Registration
+```csharp
+services.AddZibettiMediator(typeof(Application.AssemblyMarker).Assembly);
+```
+
+## Repository Pattern
+
+### Interface in Domain
+```csharp
+// Domain/Repositories/IItemRepository.cs
+public interface IItemRepository
+{
+    Task<Item?> FindByPluggyIdAsync(string pluggyItemId, CancellationToken ct = default);
+    Task<IReadOnlyList<Item>> GetAllAsync(CancellationToken ct = default);
+    Task AddAsync(Item item, CancellationToken ct = default);
+    Task UpdateAsync(Item item, CancellationToken ct = default);
+    Task DeleteAsync(Item item, CancellationToken ct = default);
+}
+```
+
+### Implementation in Infrastructure (internal)
+```csharp
+// Infrastructure/Persistence/Repositories/ItemRepository.cs
+internal sealed class ItemRepository(AppDbContext db) : IItemRepository { ... }
+```
+
+### Expose via extension in Infrastructure
+```csharp
+// Infrastructure/Persistence/RepositoryServiceExtensions.cs
+public static IServiceCollection AddRepositories(this IServiceCollection services)
+{
+    services.AddScoped<IItemRepository, ItemRepository>();
+    return services;
+}
+```
+IoC calls `services.AddRepositories()` — never references `internal` types directly.
+
+## Crosscutting Adapters
+
+External APIs go in isolated projects (`Infrastructure.{Name}`). The adapter implements a **port** defined in Application. All adapter-specific DTOs are `internal`.
+
+```
+Infrastructure.Pluggy/
+  PluggyClient.cs    ← internal implementation of Application.Ports.IPluggyClient
+  PluggyDtos.cs      ← internal — never leaks out
+  PluggyOptions.cs
+
+Application/Ports/
+  IPluggyClient.cs   ← port, defined in Application
+```
+
+## Port Location
+
+| Port type | Lives in |
+|---|---|
+| Repository (`IItemRepository`) | **Domain** |
+| External service (`IPluggyClient`) | **Application** |
+| Background service interface | **Application** |
+
+## API Layer
+- Minimal API + endpoint groups
+- Scalar for OpenAPI (`app.MapScalarApiReference()`)
+- Exception middleware in Infrastructure.IoC or Api
+- CORS configured in IoC
+
+## Validation
+- FluentValidation in Application alongside the command/query
 - Endpoint filters apply validation before handler
 
-### Persistence
-- Repository pattern for data access
+## Testing
+- xUnit + NSubstitute + FluentAssertions
+- Mirror source in `tests/`
+- Naming: `MethodName_Scenario_ExpectedResult`

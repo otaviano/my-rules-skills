@@ -1,60 +1,92 @@
 ---
 name: dotnet-clean-architecture
-description: Workflow skill for implementing features in a .NET Clean Architecture project. Use when adding new use cases, commands, handlers, or domain logic following CQRS and Chain of Responsibility patterns.
+description: Workflow for implementing features in a .NET Clean Architecture project using Zibetti.Mediator, Repository pattern, and crosscutting isolation.
 ---
 
 # .NET Clean Architecture Implementation Skill
 
-This skill provides workflows for implementing new features in a .NET Clean Architecture project following Clean Architecture principles.
-
-## Invocation
-Use this skill by asking Claude to implement a new use case, command, or feature. Example: _"add a use case to process an order"_ or _"create a query to list pending items"_.
-
 ## When to Use
-- Adding new business logic
-- Creating new commands or queries
-- Implementing domain workflows
-- Adding validation rules
-- Extending the API endpoints
+- Adding a command, query, or event handler
+- Creating a new API endpoint
+- Adding a repository (interface + implementation)
+- Adding a new crosscutting adapter (e.g. external HTTP API)
 
 ## Workflow: Add New Use Case
 
-1. **Define the Command or Query** in `Application/UseCases/`
-   - Command: `NewCommand.cs` inheriting `Command`
-   - Query: `NewQuery.cs` implementing `IQuery<Result>`
-   - Include all necessary parameters
+### 1. Define Command or Query in `Application/UseCases/`
+```csharp
+// Command with result
+public sealed record CreateItemCommand(string PluggyId) : ICommand<Guid>;
 
-2. **Create Validator** in `Application/UseCases/`
-   - `NewCommandValidator.cs` extending `AbstractValidator<NewCommand>`
-   - Add validation rules
+// Query
+public sealed record GetItemsQuery : IQuery<IReadOnlyList<ItemResult>>;
+public sealed record ItemResult(Guid Id, string Name);
+```
 
-3. **Implement Handler** in `Application/UseCases/`
-   - Command handler: `NewCommandHandler.cs` extending `RequestHandler<NewCommand>`, override `Handle`
-   - Query handler: `NewQueryHandler.cs` implementing `IQueryHandler<NewQuery, Result>`, implement `ExecuteAsync`
-   - Use primary constructor for dependencies
-   - Validate, execute business logic, persist if needed
+### 2. Validator (same folder)
+```csharp
+public sealed class CreateItemCommandValidator : AbstractValidator<CreateItemCommand>
+{
+    public CreateItemCommandValidator()
+    {
+        RuleFor(x => x.PluggyId).NotEmpty();
+    }
+}
+```
 
-4. **Update Domain** if needed
-   - Add services or handlers in `Domain/`
-   - Extend Chain of Responsibility if workflow-related
+### 3. Handler
+```csharp
+public sealed class CreateItemCommandHandler(IItemRepository repository)
+    : ICommandHandler<CreateItemCommand, Guid>
+{
+    public async Task<Guid> HandleAsync(CreateItemCommand command, CancellationToken ct = default)
+    {
+        var item = new Item(command.PluggyId);
+        await repository.AddAsync(item, ct);
+        return item.Id;
+    }
+}
+```
 
-5. **Add API Endpoint** in `Api/Endpoints/`
-   - Map new route in endpoint group
-   - Add validation filter
-   - Create request/response view models
+### 4. Domain (if needed)
+- Entity in `Domain/Entities/`
+- Repository interface in `Domain/Repositories/`
 
-6. **Register Dependencies** in `Infra.IoC/`
-   - Add to appropriate setup extensions
+### 5. Repository implementation in `Infrastructure/Persistence/Repositories/` (internal)
+- Register via `RepositoryServiceExtensions.AddRepositories()`
 
-7. **Add Tests** in `tests/`
-   - Unit tests for validator, handler, domain logic
+### 6. API Endpoint in `Api/Endpoints/`
+```csharp
+group.MapPost("/items", async (
+    [FromBody] CreateItemRequest request,
+    [FromServices] IMediator mediator,
+    CancellationToken ct) =>
+{
+    var id = await mediator.SendAsync<CreateItemCommand, Guid>(
+        new CreateItemCommand(request.PluggyId), ct);
+    return Results.Created($"/items/{id}", new { id });
+});
+```
 
-## Validation
-After implementation:
-- Run unit tests
-- Run integration tests if applicable
-- Run mutation tests to ensure code quality
-- Verify API documentation updates
-- Test endpoint with sample data
-- Ensure code adheres to Clean Code principles (small functions, meaningful names, etc.) /shared/rules/clean-code-uncle-bob.md
-- Follow .NET conventions for async patterns and language features /dotnet/rules/dotnet
+`AddZibettiMediator` scans the Application assembly — no manual handler registration.
+
+### 7. Tests
+- Unit: handler (mock repository with NSubstitute) + validator
+- Integration: WebApplicationFactory
+
+## Workflow: Add Crosscutting Adapter
+
+1. Create `Infrastructure.{Name}` project
+2. Define port in `Application/{Domain}/Ports/IAdapterName.cs`
+3. Implement in new project (`internal sealed class AdapterClient : IAdapterName`)
+4. All adapter DTOs stay `internal`
+5. Register in IoC: `services.AddHttpClient<IAdapterName, AdapterClient>(...)`
+
+## Checklist
+- [ ] Command/Query defined in Application with no infrastructure imports
+- [ ] Handler injects only interfaces (repositories or Application ports)
+- [ ] Repository interface in Domain; implementation `internal` in Infrastructure
+- [ ] Endpoint uses `IMediator`, not handler directly
+- [ ] Crosscutting adapter DTOs are `internal`
+- [ ] Unit tests: handler + validator
+- [ ] `dotnet build` 0 errors / `dotnet test` passing

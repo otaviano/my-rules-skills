@@ -39,6 +39,25 @@ ln -s /path/to/my-rules-skills/.claude /path/to/your-project/.claude
 
 Claude Code will automatically pick up rules and skills from the `.claude/` directory.
 
+### Global install (hybrid, Windows junctions)
+
+To make agnostic **skills/commands** available in every project on this machine without
+per-repo copies, junction them into the user-level `~/.claude/` (no admin needed):
+
+```powershell
+# commands (whole folder)
+New-Item -ItemType Junction -Path "$env:USERPROFILE\.claude\commands" `
+  -Target "<this-repo>\.claude\commands"
+
+# each skill -> ~/.claude/skills/<name>
+New-Item -ItemType Junction -Path "$env:USERPROFILE\.claude\skills\card-to-spec" `
+  -Target "<this-repo>\.claude\shared\skills\card-to-spec"
+```
+
+**Rules** stay committed in each project's `.claude/` (so cloud agents, CI and teammates
+apply them too). The Obsidian vault is **not** a Claude Code load path — only `~/.claude/`
+and `<project>/.claude/` are.
+
 ## How Rules Work
 
 Rules are Markdown files with YAML frontmatter stored under `rules/`. Claude Code loads them automatically based on the `applyTo` glob pattern.
@@ -98,6 +117,7 @@ description: When and how to use this skill.
 | [clean-code-uncle-bob](.claude/shared/rules/clean-code-uncle-bob.md) | Clean Code principles (Uncle Bob) |
 | [solid](.claude/shared/rules/solid.enforcer.md) | SOLID principles enforcer |
 | [object-calisthenics](.claude/shared/rules/object.calisthenics.enforcer.md) | Nine rules of Object Calisthenics |
+| [spec-driven-openspec](.claude/shared/rules/spec-driven-openspec.md) | Spec-Driven Development (OpenSpec) + ADR workflow and artifact placement |
 
 ### .NET
 | Rule | Description |
@@ -128,6 +148,7 @@ description: When and how to use this skill.
 ### Shared
 | Skill | Description |
 |-------|-------------|
+| [card-to-spec](.claude/shared/skills/card-to-spec/SKILL.md) | Detalha interativamente um card (Notion) e o transforma num change OpenSpec pronto para implementar, atualizando o card de volta |
 | [code-review](.claude/shared/skills/code-review/SKILL.md) | Analyzes recent changes for security, performance, quality, test coverage, and design patterns |
 | [pull-request](.claude/shared/skills/pull-request/SKILL.md) | Prepares and creates a pull request following conventional commits, running tests and code review first |
 | [test-runner](.claude/shared/skills/test-runner/SKILL.md) | Runs tests, analyzes coverage gaps, writes missing tests, and validates mutation score |

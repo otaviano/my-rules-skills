@@ -1,0 +1,20 @@
+{
+  "name": "otaviano-core",
+  "description": "Skills, comandos e subagents pessoais do Otaviano. Reaproveita a estrutura .claude/ por domínio via caminhos customizados (sem mover arquivos).",
+  "author": {
+    "name": "Otaviano",
+    "email": "otavianomontes@gmail.com"
+  },
+  "repository": "https://github.com/otaviano/my-rules-skills",
+  "license": "MIT",
+  "keywords": ["openspec", "clean-architecture", "code-review", "dotnet", "react"],
+  "skills": [
+    "./.claude/shared/skills",
+    "./.claude/dotnet/skills",
+    "./.claude/golang/skills",
+    "./.claude/python/skills",
+    "./.claude/react/skills"
+  ],
+  "commands": ["./.claude/commands"],
+  "agents": ["./.claude/shared/subagents"]
+}

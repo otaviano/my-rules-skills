@@ -1,6 +1,26 @@
 # my-rules-skills
 
-An agnostic library of Claude Code rules and skills, organized by language and shared concerns. Drop the `.claude/` folder into any project to bring consistent AI-assisted development conventions.
+An agnostic library of Claude Code rules and skills, organized by language and shared concerns. Two ways to consume it:
+
+1. **As a Claude Code plugin** (recommended for your global setup) — install once, available in every project on the machine, updates with a pull.
+2. **As a per-project `.claude/` folder** — copy/symlink into a single repo (good when a project should pin its own conventions).
+
+## Install as a Claude Code plugin (global)
+
+This repo doubles as a [plugin marketplace](https://code.claude.com/docs/en/plugin-marketplaces). In any machine:
+
+```text
+/plugin marketplace add otaviano/my-rules-skills
+/plugin install otaviano-core@otaviano-rules-skills
+```
+
+That registers the `otaviano-core` plugin, which exposes all **skills**, **commands** and **subagents** from the `.claude/` tree below — no symlinks, no absolute paths. Pull/refresh with:
+
+```text
+/plugin marketplace update otaviano-rules-skills
+```
+
+> **Note on rules:** the plugin system distributes skills/commands/agents, but *not* "always-on" rules (`.claude/**/rules/*.md`). Those are still consumed per-project via `@import` in a project `CLAUDE.md`, or globally via your private dotfiles `~/.claude/CLAUDE.md`. Keep secrets (`settings.json` with tokens, `.credentials.json`) out of this public repo.
 
 ## Directory Structure
 
@@ -128,6 +148,7 @@ description: When and how to use this skill.
 ### Shared
 | Skill | Description |
 |-------|-------------|
+| [card-to-spec](.claude/shared/skills/card-to-spec/SKILL.md) | Detalha um card (ex.: Notion) e o transforma num change OpenSpec pronto para implementar, atualizando o card de volta |
 | [code-review](.claude/shared/skills/code-review/SKILL.md) | Analyzes recent changes for security, performance, quality, test coverage, and design patterns |
 | [pull-request](.claude/shared/skills/pull-request/SKILL.md) | Prepares and creates a pull request following conventional commits, running tests and code review first |
 | [test-runner](.claude/shared/skills/test-runner/SKILL.md) | Runs tests, analyzes coverage gaps, writes missing tests, and validates mutation score |

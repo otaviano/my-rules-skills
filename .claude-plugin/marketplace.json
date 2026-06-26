@@ -1,0 +1,14 @@
+{
+  "name": "otaviano-rules-skills",
+  "owner": {
+    "name": "Otaviano",
+    "email": "otavianomontes@gmail.com"
+  },
+  "plugins": [
+    {
+      "name": "otaviano-core",
+      "source": "./",
+      "description": "Skills, comandos e subagents pessoais do Otaviano (OpenSpec, code-review, pull-request, test-runner, feature scaffolds .NET/React/Go/Python)."
+    }
+  ]
+}

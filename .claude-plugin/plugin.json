@@ -1,6 +1,6 @@
 {
   "name": "otaviano-core",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Skills, comandos e subagents pessoais do Otaviano. Reaproveita a estrutura .claude/ por domínio via caminhos customizados (sem mover arquivos).",
   "author": {
     "name": "Otaviano",

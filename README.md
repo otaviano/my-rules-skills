@@ -148,7 +148,10 @@ description: When and how to use this skill.
 ### Shared
 | Skill | Description |
 |-------|-------------|
+| [audit-secrets-before-commit](.claude/shared/skills/audit-secrets-before-commit/SKILL.md) | Varre arquivos por segredos e paths não-portáveis antes de versionar (sobretudo em repo público) |
+| [bootstrap-claude-machine](.claude/shared/skills/bootstrap-claude-machine/SKILL.md) | Configura máquina nova com o ambiente Claude (dotfiles/chezmoi + plugin marketplace + Obsidian Git) |
 | [card-to-spec](.claude/shared/skills/card-to-spec/SKILL.md) | Detalha um card (ex.: Notion) e o transforma num change OpenSpec pronto para implementar, atualizando o card de volta |
+| [obsidian-git-setup](.claude/shared/skills/obsidian-git-setup/SKILL.md) | Configura sync gratuito de um vault Obsidian via Git (desktop + celular) com higiene de estado e PAT |
 | [code-review](.claude/shared/skills/code-review/SKILL.md) | Analyzes recent changes for security, performance, quality, test coverage, and design patterns |
 | [pull-request](.claude/shared/skills/pull-request/SKILL.md) | Prepares and creates a pull request following conventional commits, running tests and code review first |
 | [test-runner](.claude/shared/skills/test-runner/SKILL.md) | Runs tests, analyzes coverage gaps, writes missing tests, and validates mutation score |

@@ -1,5 +1,6 @@
 {
   "name": "otaviano-rules-skills",
+  "description": "Skills, comandos e subagents pessoais do Otaviano (OpenSpec, code-review, bootstrap de ambiente, feature scaffolds .NET/React/Go/Python).",
   "owner": {
     "name": "Otaviano",
     "email": "otavianomontes@gmail.com"

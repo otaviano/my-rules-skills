@@ -39,6 +39,14 @@ No Claude Code:
 
 ### 3. Vault Obsidian (notas/ADRs)
 - Delegue à skill [[obsidian-git-setup]] (clone do vault + plugin Git + PAT + auto-sync).
+- **Espelho de ADRs (desktop)**: para projetos cuja fonte de ADR vive no repo de código
+  (`docs/adr/`), recrie o symlink local — é por-máquina e fica fora do git (não sincroniza
+  pro celular, onde o caminho não existiria):
+  ```bash
+  ln -sfn ~/source/repos/<projeto>/docs/adr ~/<vault>/<projeto>/adr
+  ```
+  Garanta que o `.gitignore` do vault ignora `<projeto>/adr` (**sem barra final**, para casar
+  também o symlink). Fonte canônica continua no repo de código; o vault é só leitura.
 
 ### 4. Validação final
 - `chezmoi diff` vazio; `claude` lê settings/mcp; plugin instalado; vault sincroniza.

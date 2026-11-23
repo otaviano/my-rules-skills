@@ -48,7 +48,13 @@ No Claude Code:
   Garanta que o `.gitignore` do vault ignora `<projeto>/adr` (**sem barra final**, para casar
   também o symlink). Fonte canônica continua no repo de código; o vault é só leitura.
 
-### 4. Validação final
+### 4. Periféricos — teclado, cedilha e mouse (GNOME)
+- Delegue à skill [[setup-gnome-workstation]]: layouts US alt-intl + ABNT2, cedilha
+  (`'` + `c` → `ç` em vez de `ć`) e MX Master 3S via Solaar (roda do polegar = volume).
+- É config de sessão gráfica, não do Claude — mas sem isso não se escreve português direito
+  na máquina nova.
+
+### 5. Validação final
 - `chezmoi diff` vazio; `claude` lê settings/mcp; plugin instalado; vault sincroniza.
 - Liste o que ficou pendente de credencial (tokens, chaves OAuth) para o usuário preencher.
 

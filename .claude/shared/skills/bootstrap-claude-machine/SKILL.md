@@ -48,8 +48,9 @@ No Claude Code:
   Garanta que o `.gitignore` do vault ignora `<projeto>/adr` (**sem barra final**, para casar
   também o symlink). Fonte canônica continua no repo de código; o vault é só leitura.
 
-### 4. Teclado — cedilha (pt-BR em layout US-International)
-- Delegue à skill [[fix-cedilla-keyboard]]: sem ela, `'` + `c` produz `ć` em vez de `ç`.
+### 4. Periféricos — teclado, cedilha e mouse (GNOME)
+- Delegue à skill [[setup-gnome-workstation]]: layouts US alt-intl + ABNT2, cedilha
+  (`'` + `c` → `ç` em vez de `ć`) e MX Master 3S via Solaar (roda do polegar = volume).
 - É config de sessão gráfica, não do Claude — mas sem isso não se escreve português direito
   na máquina nova.
 
